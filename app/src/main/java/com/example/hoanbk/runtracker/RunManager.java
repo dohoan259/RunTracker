@@ -3,6 +3,7 @@ package com.example.hoanbk.runtracker;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.location.LocationManager;
 import android.util.Log;
 
@@ -43,9 +44,22 @@ public class RunManager {
 //        Log.d(TAG, "StartLocationUpdates");
 
         String provider = LocationManager.GPS_PROVIDER;
+        // get last known location and broadcast it if you have one
+        Location lastLocation = mLocationManager.getLastKnownLocation(provider);
+        if (lastLocation != null) {
+            lastLocation.setTime(System.currentTimeMillis());
+            broadcastLocation(lastLocation);
+        }
+
         // start update from the location manager
         PendingIntent pi = getLocationPendingIntent(true);
         mLocationManager.requestLocationUpdates(provider, 0, 0, pi);
+    }
+
+    private void broadcastLocation(Location loc) {
+        Intent intent = new Intent(ACTION_LOCATION);
+        intent.putExtra(LocationManager.KEY_LOCATION_CHANGED, loc);
+        mAppContext.sendBroadcast(intent);
     }
 
     public void stopLocationUpdates() {
