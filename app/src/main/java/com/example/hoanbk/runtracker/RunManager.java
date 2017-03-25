@@ -105,6 +105,8 @@ public class RunManager {
         return run;
     }
 
+    public RunDatabaseHelper.RunCursor queryRuns() { return mHelper.queryRuns();}
+
     public void startTrackingRun(Run run) {
         mCurrentRunId = run.getId();
         mPrefs.edit().putLong(PREF_CURRENT_RUN_ID, mCurrentRunId).apply();
