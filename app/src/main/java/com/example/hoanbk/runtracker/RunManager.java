@@ -4,6 +4,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.location.LocationManager;
+import android.util.Log;
 
 /**
  * Created by hoanbk on 3/23/2017.
@@ -39,13 +40,15 @@ public class RunManager {
     }
 
     public void startLocationUpdates() {
+//        Log.d(TAG, "StartLocationUpdates");
+
         String provider = LocationManager.GPS_PROVIDER;
         // start update from the location manager
         PendingIntent pi = getLocationPendingIntent(true);
         mLocationManager.requestLocationUpdates(provider, 0, 0, pi);
     }
 
-    public void stopLocationupdates() {
+    public void stopLocationUpdates() {
         PendingIntent pi = getLocationPendingIntent(false);
         if (pi != null) {
             mLocationManager.removeUpdates(pi);
@@ -56,4 +59,6 @@ public class RunManager {
     public  boolean isTrackingRun() {
         return getLocationPendingIntent(false) != null;
     }
+
+
 }

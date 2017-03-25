@@ -10,10 +10,4 @@ public class RunActivity extends SingleFragmentActivity {
     public Fragment createFragment() {
         return new RunFragment();
     }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_run);
-    }
 }
