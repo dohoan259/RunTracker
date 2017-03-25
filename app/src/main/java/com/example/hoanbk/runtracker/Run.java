@@ -17,6 +17,16 @@ public class Run {
 
     private Date mStartDate;
 
+    public long getId() {
+        return mId;
+    }
+
+    public void setId(long id) {
+        mId = id;
+    }
+
+    private long mId;
+
     public Run() {
         mStartDate = new Date();
     }

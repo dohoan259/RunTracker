@@ -91,15 +91,16 @@ public class RunFragment extends Fragment {
         mStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mRun = new Run();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     if (getActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
                             == PackageManager.PERMISSION_GRANTED) {
-                        mRunManager.startLocationUpdates();
+//                        mRunManager.startLocationUpdates();
+                        mRun = mRunManager.startNewRun();
                         updateUI();
                     }
                 } else {
-                    mRunManager.startLocationUpdates();
+//                    mRunManager.startLocationUpdates();
+                    mRun = mRunManager.startNewRun();
                     updateUI();
                 }
             }
@@ -112,11 +113,13 @@ public class RunFragment extends Fragment {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     if (getActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
                             == PackageManager.PERMISSION_GRANTED) {
-                        mRunManager.stopLocationUpdates();
+//                        mRunManager.stopLocationUpdates();
+                        mRunManager.stopRun();
                         updateUI();
                     }
                 } else {
-                    mRunManager.stopLocationUpdates();
+//                    mRunManager.stopLocationUpdates();
+                    mRunManager.stopRun();
                     updateUI();
                 }
             }
