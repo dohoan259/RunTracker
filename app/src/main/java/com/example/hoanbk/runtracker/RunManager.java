@@ -119,4 +119,19 @@ public class RunManager {
             Log.e(TAG, "Location received with no tracking run; ignoring");
         }
     }
+
+    public Run getRun(long id) {
+        Run run = null;
+        RunDatabaseHelper.RunCursor cursor = mHelper.queryrun(id);
+        cursor.moveToFirst();
+        if(!cursor.isAfterLast()) {
+            run = cursor.getRun();
+        }
+        cursor.close();
+        return run;
+    }
+
+    public boolean isTrackingRun(Run run) {
+        return run != null && run.getId() == mCurrentRunId;
+    }
 }

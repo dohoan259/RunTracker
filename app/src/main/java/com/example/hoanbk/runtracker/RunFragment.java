@@ -27,6 +27,7 @@ import java.util.List;
 
 public class RunFragment extends Fragment {
     private static final String TAG = "RunFragment";
+    private static final String ARG_RUN_ID = "RUN_ID";
 
     private static final int REQUEST_LOCATION = 1;
     private Button mStartButton, mStopButton;
@@ -42,6 +43,9 @@ public class RunFragment extends Fragment {
         @Override
         protected void onLocationReceived(Context context, Location loc) {
             super.onLocationReceived(context, loc);
+            if (!mRunManager.isTrackingRun(mRun)) {
+                return;
+            }
             mLastLocation = loc;
             // update UI
             if (isVisible()) {
@@ -57,11 +61,29 @@ public class RunFragment extends Fragment {
         }
     };
 
+    public static RunFragment newInstance(long runId) {
+        Bundle args = new Bundle();
+        args.putLong(ARG_RUN_ID, runId);
+
+        RunFragment fragment = new RunFragment();
+        fragment.setArguments(args);
+
+        return fragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         mRunManager = RunManager.getInstance(getActivity());
+
+        Bundle args = getArguments();
+        if (args != null) {
+            long runId = args.getLong(ARG_RUN_ID, -1);
+            if (runId != -1) {
+                mRun = mRunManager.getRun(runId);
+            }
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             List<String> permissions = new ArrayList<>();
@@ -95,12 +117,20 @@ public class RunFragment extends Fragment {
                     if (getActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
                             == PackageManager.PERMISSION_GRANTED) {
 //                        mRunManager.startLocationUpdates();
-                        mRun = mRunManager.startNewRun();
+                        if (mRun == null) {
+                            mRun = mRunManager.startNewRun();
+                        } else {
+                            mRunManager.startTrackingRun(mRun);
+                        }
                         updateUI();
                     }
                 } else {
 //                    mRunManager.startLocationUpdates();
-                    mRun = mRunManager.startNewRun();
+                    if (mRun == null) {
+                        mRun = mRunManager.startNewRun();
+                    } else {
+                        mRunManager.startTrackingRun(mRun);
+                    }
                     updateUI();
                 }
             }
@@ -142,8 +172,9 @@ public class RunFragment extends Fragment {
 
     private void updateUI() {
         boolean started = mRunManager.isTrackingRun();
+        boolean trackingThisRun = mRunManager.isTrackingRun(mRun);
         mStartButton.setEnabled(!started);
-        mStopButton.setEnabled(started);
+        mStopButton.setEnabled(started && trackingThisRun);
 
         if (mRun != null) {
             mStartTextView.setText(mRun.getStartDate().toString());
