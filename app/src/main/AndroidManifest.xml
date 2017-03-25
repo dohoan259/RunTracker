@@ -25,6 +25,11 @@
                 <action android:name="com.example.hoanbk.runtracker.ACTION_LOCATION"/>
             </intent-filter>
         </receiver>
+        <receiver android:name=".TrackingLocationReceiver">
+            <intent-filter>
+                <action android:name="com.example.hoanbk.runtracker.ACTION_LOCATION"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

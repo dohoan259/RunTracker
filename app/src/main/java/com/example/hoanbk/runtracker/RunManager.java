@@ -109,4 +109,12 @@ public class RunManager {
         mCurrentRunId = run.getId();
         mPrefs.edit().putLong(PREF_CURRENT_RUN_ID, mCurrentRunId).apply();
     }
+
+    public void insertLocation(Location loc) {
+        if (mCurrentRunId != -1) {
+            mHelper.insertLocation(mCurrentRunId, loc);
+        } else {
+            Log.e(TAG, "Location received with no tracking run; ignoring");
+        }
+    }
 }

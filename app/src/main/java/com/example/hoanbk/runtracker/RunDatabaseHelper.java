@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.location.Location;
 import android.os.Build;
 
 /**
@@ -56,5 +57,17 @@ public class RunDatabaseHelper extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         cv.put(COLUMN_RUN_START_DATE, run.getStartDate().getTime());
         return getWritableDatabase().insert(TABLE_RUN, null, cv);
+    }
+
+    public long insertLocation(long runId, Location location) {
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_LOCATION_TIMESTAMP, location.getTime());
+        cv.put(COLUMN_LOCATION_LONGITUDE, location.getLongitude());
+        cv.put(COLUMN_LOCATION_LATITUDE, location.getLatitude());
+        cv.put(COLUMN_LOCATION_ALTITUDE, location.getAltitude());
+        cv.put(COLUMN_LOCATION_PROVIDER, location.getProvider());
+        cv.put(COLUMN_LOCATION_RUN_ID, runId);
+
+        return getWritableDatabase().insert(TABLE_LOCATION, null, cv);
     }
 }
